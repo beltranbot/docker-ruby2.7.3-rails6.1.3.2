@@ -11,8 +11,6 @@ RUN npm install --global yarn
 
 RUN useradd -u 1000 rails -m
 
-USER rails
-
 WORKDIR /myapp
 
 # install blunder
@@ -22,8 +20,14 @@ RUN gem install webpacker
 
 RUN gem install rails
 
-EXPOSE 3000
+COPY Gemfile /myapp/Gemfile
 
-# CMD tail -f /dev/null
+COPY Gemfile.lock /myapp/Gemfile.lock
+
+RUN bundle install
+
+USER rails
+
+EXPOSE 3000
 
 ENTRYPOINT [ "tail", "-f", "/dev/null"]

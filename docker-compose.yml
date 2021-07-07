@@ -3,18 +3,31 @@ services:
     db:
         image: postgres
         volumes:
-            - ./tmp/db:/var/lib/postgresql/data
+            - rails6_chat_app:/var/lib/postgresql/data
         ports:
             - "5432:5432"
         environment:
             POSTGRES_PASSWORD: password
+        networks:
+            - rails6
     web:
         build:
             context: ./docker/rails6
             dockerfile: Dockerfile
         volumes:
             - .:/myapp
+            - rails6_chat_app_gems:/usr/local/bundle
         ports:
             - "3000:3000"
         depends_on:
-        - db
+            - db
+        networks:
+            - rails6
+
+networks:
+    rails6:
+        driver: bridge
+
+volumes:
+    rails6_chat_app:
+    rails6_chat_app_gems:
